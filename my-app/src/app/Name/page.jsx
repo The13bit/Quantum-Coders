@@ -1,13 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { motion } from "framer-motion";
+import AnimatedBackground from "@/components/AnimatedBackground";
+import { UserIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import AnimatedBackground from "@/components/AnimatedBackground";
-import { UserIcon } from "lucide-react"; // Import a profile icon
-
+import Link from "next/link";
 export default function ProfilePage() {
   const [details, setDetails] = useState({
     street: "",
@@ -18,25 +17,38 @@ export default function ProfilePage() {
     phone: "",
     dob: "",
     gender: "",
-    profilePic: null, // Adding profile picture field
+    profilePic: null,
   });
 
-  // Simulating API call to fetch user details
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch user details
   useEffect(() => {
     const fetchUserDetails = async () => {
-      // Replace with your API endpoint
-      const userDetails = {
-        street: "123 Main St",
-        city: "Mumbai",
-        state: "Maharashtra",
-        country: "India",
-        pinCode: "400001",
-        phone: "9876543210",
-        dob: "2000-01-01",
-        gender: "Male",
-        profilePic: null, // Initial value
-      };
-      setDetails(userDetails);
+      try {
+        const response = await fetch("/api/auth/userInfo");
+        if (!response.ok) {
+          throw new Error("Failed to fetch user info");
+        }
+        const data = await response.json();
+        
+        setDetails({
+          street: data.address?.street || "",
+          city: data.address?.city || "",
+          state: data.address?.state || "",
+          country: data.address?.country || "",
+          pinCode: data.address?.pinCode || "",
+          phone: data.phoneNumber || "",
+          dob: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString().split('T')[0] : "",
+          gender: data.gender || "",
+          profilePic: null
+        });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchUserDetails();
@@ -45,17 +57,43 @@ export default function ProfilePage() {
   const handleChange = (e) => {
     const { id, value, files } = e.target;
     if (id === "profilePic" && files.length > 0) {
-      setDetails((prevDetails) => ({ ...prevDetails, profilePic: files[0] }));
+      setDetails((prev) => ({ ...prev, profilePic: files[0] }));
     } else {
-      setDetails((prevDetails) => ({ ...prevDetails, [id]: value }));
+      setDetails((prev) => ({ ...prev, [id]: value }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated details:", details);
-    // Call API to save updated details
+    try {
+      const response = await fetch("/api/auth/userInfo", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(details),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update user info");
+      }
+
+      const data = await response.json();
+      console.log("Successfully updated:", data);
+      // You can add a success notification here
+    } catch (err) {
+      setError(err.message);
+      // You can add an error notification here
+    }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   const formAnimation = {
     hidden: { opacity: 0, y: 50 },

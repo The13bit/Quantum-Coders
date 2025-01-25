@@ -34,14 +34,7 @@ export async function POST(request) {
 
     const project = await Project.create({
       creator: session.user.id,
-      title: body.title,
-      description: body.description,
-      
-      fundingGoal: body.fundingGoal,
-      deadline: body.deadline,
-      category: body.category,
-      location: body.location,
-      mediaUrls: body.mediaUrls
+      ...body
     });
 
     return NextResponse.json(project);

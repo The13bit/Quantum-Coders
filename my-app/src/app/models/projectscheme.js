@@ -47,6 +47,25 @@ const ProjectSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    faq:[
+      {
+        question: String,
+        answer: String,
+      },
+    ],
+    comments:[
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        content: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     description: String,
     fundingGoal: {
       type: Number,

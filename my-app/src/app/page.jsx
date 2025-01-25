@@ -26,9 +26,17 @@ export default function Home() {
           .filter((project) => new Date(project.deadline) > new Date())
           .sort((a, b) => b.fundedAmount - a.fundedAmount)
           .slice(0, 3);
+        // add an etra raised field that is addition of amounts in contibution
+        filteredProjects.forEach((project) => {
+          project.raised = project.contributions.reduce(
+            (total, contribution) => total + contribution.amount,
+            0
+          );
+        });
 
         setTopProjects(filteredProjects);
         setIsLoading(false);
+        console.log(filteredProjects);
       } catch (err) {
         setError(err.message);
         setIsLoading(false);

@@ -9,7 +9,8 @@ import { getToken } from "next-auth/jwt";
 export async function GET(request, { params }) {
   try {
     await db();
-    const project = await Project.findById(params.id)
+    const { id } = await params
+    const project = await Project.findById(id)
       .populate("creator", "name email")
       .populate("collaborators", "name email");
 
@@ -33,9 +34,9 @@ export async function PUT(request, { params }) {
 
     const body = await request.json();
     await db();
-
+    const { id } = await params
     const project = await Project.findOneAndUpdate(
-      { _id: params.id, creator: session.user.id },
+      { _id: id, creator: session.user.id },
       body,
       { new: true }
     );
@@ -59,8 +60,9 @@ export async function DELETE(request, { params }) {
     }
 
     await db();
+   const { id } = await params
     const project = await Project.findOneAndDelete({
-      _id: params.id,
+      _id: id,
       creator: session.user.id
     });
 
