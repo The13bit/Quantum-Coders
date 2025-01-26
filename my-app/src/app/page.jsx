@@ -18,7 +18,7 @@ export default function Home() {
     const fetchTopProjects = async () => {
       try {
         // Replace with your actual API endpoint
-        const response = await fetch("/api/projects");
+        const response = await fetch("/api/projects/all");
         const data = await response.json();
 
         // Filter and sort projects
@@ -54,7 +54,7 @@ export default function Home() {
       className="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
     >
       <DynamicBackground />
-      <Navbar />
+ 
       <main className="flex-grow relative z-10">
         <Header />
         <FeaturedProjects

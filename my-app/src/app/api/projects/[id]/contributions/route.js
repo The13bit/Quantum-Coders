@@ -15,9 +15,10 @@ export async function POST(request, { params }) {
 
     const body = await request.json();
     await db();
+    const {id}=await params;
 
     const project = await Project.findByIdAndUpdate(
-      params.id,
+      id,
       {
         $push: {
           contributions: {

@@ -32,7 +32,7 @@ export default function ProfilePage() {
           throw new Error("Failed to fetch user info");
         }
         const data = await response.json();
-        
+
         setDetails({
           street: data.address?.street || "",
           city: data.address?.city || "",
@@ -40,9 +40,11 @@ export default function ProfilePage() {
           country: data.address?.country || "",
           pinCode: data.address?.pinCode || "",
           phone: data.phoneNumber || "",
-          dob: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString().split('T')[0] : "",
+          dob: data.dateOfBirth
+            ? new Date(data.dateOfBirth).toISOString().split("T")[0]
+            : "",
           gender: data.gender || "",
-          profilePic: null
+          profilePic: null,
         });
       } catch (err) {
         setError(err.message);
@@ -191,7 +193,7 @@ export default function ProfilePage() {
               <option value="Other">Other</option>
             </select>
           </motion.div>
-          <motion.div variants={itemAnimation}>
+          {/*  <motion.div variants={itemAnimation}>
             <label
               htmlFor="profilePic"
               className="block text-sm font-medium text-gray-700 mb-1"
@@ -205,7 +207,7 @@ export default function ProfilePage() {
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
             />
-          </motion.div>
+          </motion.div>*/}
           <motion.div variants={itemAnimation}>
             <Button
               type="submit"

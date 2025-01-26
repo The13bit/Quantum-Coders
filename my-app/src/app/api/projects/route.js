@@ -6,14 +6,22 @@ import Project from "@/app/models/projectscheme";
 import { getToken } from "next-auth/jwt";
 
 // Get all projects
+// src/app/api/projects/route.js
+
 export async function GET(request) {
   try {
     await db();
     const url = new URL(request.url);
-    const query = url.searchParams.get('query') || {};
-    const projects = await Project.find(query)
-      .populate("creator", "name email")
-      .populate("collaborators", "name email");
+    const page = parseInt(url.searchParams.get('page')) || 1;
+    const limit = parseInt(url.searchParams.get('limit')) || 6;
+    const skip = (page - 1) * limit;
+    
+    const projects = await Project.find()
+      .populate("creator", "name email avatar")
+      .populate("collaborators", "name email")
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
     
     return NextResponse.json(projects);
   } catch (error) {
