@@ -21,7 +21,7 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      className="bg-white bg-opacity-20 backdrop-blur-md py-4 px-6 flex items-center justify-between sticky top-0 z-50"
+      className="bg-purple-300 bg-opacity-20 backdrop-blur-md py-4 px-6 flex items-center justify-between sticky top-0 z-50"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -73,9 +73,16 @@ export default function Navbar() {
             </Link>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link href="/view_all_projects">
+            <Link href="/Create">
               <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg">
                 Create
+              </span>
+            </Link>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link href="/myprojects">
+              <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg">
+               My Projects
               </span>
             </Link>
           </motion.div>

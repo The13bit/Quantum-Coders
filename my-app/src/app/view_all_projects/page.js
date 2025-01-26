@@ -15,6 +15,13 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const projectsPerPage = 6;
+  const getHoursLeft = (deadlineDate) => {
+    const now = new Date();
+    const deadline = new Date(deadlineDate);
+    const diffInMs = deadline - now;
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    return diffInHours > 0 ? diffInHours : 0;
+  };
 
   const fetchProjects = async () => {
     if (loading) return;
@@ -82,7 +89,7 @@ export default function HomePage() {
         variants={fadeInAnimation}
       >
         <h1 className="text-4xl font-bold text-center text-indigo-800 mb-8">
-          Explore Our Projects
+          Explore Community Projects
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project) => (
@@ -99,7 +106,7 @@ export default function HomePage() {
                   }
                   title={project.title || "Untitled Project"}
                   username={project.creator?.name || "Anonymous"}
-                  timeLeft={project.deadline || "N/A"}
+                  timeLeft={Math.ceil(getHoursLeft(project.deadline) / 24)}
                   fundingPercent={
                     (project.raised / project.fundingGoal) * 100 || 0
                   }

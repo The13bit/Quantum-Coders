@@ -19,7 +19,7 @@ function ProjectDetail({
   hoursLeft = 0,
   description = "",
   faq = [],
-  updates = [],
+  progressUpdates = [],
   comments = [],
 }) {
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
@@ -89,9 +89,11 @@ function ProjectDetail({
             <h2 className="text-2xl font-semibold mb-4 text-indigo-800">
               Project Updates
             </h2>
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <p className="text-gray-700 leading-relaxed">{updates}</p>
-            </div>
+            {progressUpdates.map((project, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-sm p-4">
+                <p className="text-gray-700 leading-relaxed">{project.description}</p>
+              </div>
+            ))}
           </motion.section>
         );
       case "Comments":
@@ -163,7 +165,9 @@ function ProjectDetail({
                   >
                     {mediaUrls[currentMediaIndex].type === "image" ? (
                       <img
-                        src={mediaUrls[currentMediaIndex].url || "/placeholder.svg"}
+                        src={
+                          mediaUrls[currentMediaIndex].url || "/placeholder.svg"
+                        }
                         alt="Project Media"
                         className="object-cover w-full h-full"
                       />
