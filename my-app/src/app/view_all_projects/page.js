@@ -1,9 +1,13 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
 import Navbar from "@/components/Navbar";
-import Link from "next/link";
+import AnimatedBackground from "@/components/AnimatedBackground";
+
 export default function HomePage() {
   const [projects, setProjects] = useState([]);
   const [page, setPage] = useState(1);
@@ -15,9 +19,7 @@ export default function HomePage() {
     if (loading) return;
     try {
       setLoading(true);
-      const res = await fetch(
-        `/api/projects/all`
-      );
+      const res = await fetch(`/api/projects/all`);
       const newProjects = await res.json();
 
       newProjects.forEach((project) => {
@@ -31,7 +33,6 @@ export default function HomePage() {
       }
 
       setProjects((prev) => {
-        // Remove duplicates based on _id
         const uniqueProjects = [...prev, ...newProjects].filter(
           (project, index, self) =>
             index === self.findIndex((p) => p._id === project._id)
@@ -63,19 +64,34 @@ export default function HomePage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
+
+  const fadeInAnimation = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
-    <div>
-      
-      <div className="min-h-screen bg-gray-200 p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <Link
-                href={`/projects/${project._id}`}
-                key={`${project._id}-${project.title}*${project._id}`}
-              >0.
+    <div className="relative min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100">
+      <AnimatedBackground />
+     
+      <motion.div
+        className="relative z-10 max-w-7xl mx-auto py-8 px-4"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInAnimation}
+      >
+        <h1 className="text-4xl font-bold text-center text-indigo-800 mb-8">
+          Explore Our Projects
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project) => (
+            <motion.div
+              key={`${project._id}-${project.title}`}
+              variants={fadeInAnimation}
+              className="transition-transform transform hover:scale-105"
+            >
+              <Link href={`/projects/${project._id}`}>
                 <ProjectCard
-                  key={`${project._id}-${project.title}`}
                   projectImage={project.image || "https://placehold.co/600x400"}
                   profileImage={
                     project.creator?.avatar || "https://placehold.co/600x400"
@@ -92,24 +108,28 @@ export default function HomePage() {
                   categories={project.categories || []}
                 />
               </Link>
-            ))}
-          </div>
-          {loading && (
-            <div className="text-center py-4">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
-                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                  Loading...
-                </span>
-              </div>
-            </div>
-          )}
-          {!hasMore && projects.length > 0 && (
-            <div className="text-center py-4 text-gray-600">
-              No more projects to load
-            </div>
-          )}
+            </motion.div>
+          ))}
         </div>
-      </div>
+        {loading && (
+          <div className="text-center py-4">
+            <motion.div
+              className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+              variants={fadeInAnimation}
+            >
+              <span className="sr-only">Loading...</span>
+            </motion.div>
+          </div>
+        )}
+        {!hasMore && projects.length > 0 && (
+          <motion.div
+            className="text-center py-4 text-gray-600"
+            variants={fadeInAnimation}
+          >
+            No more projects to load
+          </motion.div>
+        )}
+      </motion.div>
     </div>
   );
 }

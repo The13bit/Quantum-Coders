@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-
+import Image from "next/image";
 export default function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => {
@@ -26,8 +26,9 @@ export default function Navbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Link href="/" className="text-2xl font-bold text-indigo-800">
-        CommunityImpact
+      <Link href="/" className="text-2xl font-bold text-indigo-800 ">
+        <Image src="/logo.png" alt="CommunityImpact " className="rounded-full
+      border-collapse border-2  p-2"  width={64} height={34} />
       </Link>
 
       {!isAuthenticated ? (
