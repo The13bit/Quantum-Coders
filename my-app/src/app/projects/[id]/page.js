@@ -62,6 +62,12 @@ export default function HomePage({params}) {
               project.contributions.forEach((i)=>{
                 i.name=getcontribname(i.contributor);
               })
+              //{ type: 'image', url: 'https://example.com/image1.jpg' },
+              project.mediaUrls=project.mediaUrls.map((i)=>{
+                return {type:"image",url:i}
+              }
+              )
+
               console.log(project)
               return project;
             } catch (error) {

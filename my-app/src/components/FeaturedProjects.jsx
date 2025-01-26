@@ -60,7 +60,7 @@ export default function FeaturedProjects({ projects, isLoading, error }) {
                 >
                   <div className="relative h-48 overflow-hidden">
                     <motion.img
-                      src={project.image}
+                      src={project.mediaUrls[0]}
                       alt={project.title}
                       className="w-full h-full object-cover"
                       whileHover={{ scale: 1.1 }}

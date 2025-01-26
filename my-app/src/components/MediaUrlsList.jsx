@@ -4,6 +4,7 @@ import { useState } from "react"
 import { uploadToBlob } from "@/utils/az"
 
 
+
 export default function MediaUrlsList({
   mediaUrls,
   setMediaUrls
@@ -24,9 +25,9 @@ export default function MediaUrlsList({
     if (file) {
       try {
         setUploading(true)
-        const azureUrl = await uploadToBlob(file)
-        console.log("Uploaded to Azure:", azureUrl)
-        setMediaUrls([...mediaUrls, azureUrl])
+        const cloudinary = await uploadToBlob(file)
+        console.log("Uploaded to cloudinary:", cloudinary)
+        setMediaUrls([...mediaUrls, cloudinary])
       } catch (error) {
         console.error("Upload failed:", error)
       } finally {

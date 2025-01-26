@@ -11,7 +11,7 @@ import PaymentField from "./PaymentField";
 function ProjectDetail({
   _id = "",
   title = "Untitled Project",
-  media = [],
+  mediaUrls = [],
   fundingGoal = 0,
   raised = 0,
   ovt = [],
@@ -29,13 +29,13 @@ function ProjectDetail({
 
   const handlePrev = () => {
     setCurrentMediaIndex((prevIndex) =>
-      prevIndex === 0 ? media.length - 1 : prevIndex - 1
+      prevIndex === 0 ? mediaUrls.length - 1 : prevIndex - 1
     );
   };
 
   const handleNext = () => {
     setCurrentMediaIndex((prevIndex) =>
-      prevIndex === media.length - 1 ? 0 : prevIndex + 1
+      prevIndex === mediaUrls.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -151,7 +151,7 @@ function ProjectDetail({
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              {media && media.length > 0 ? (
+              {mediaUrls && mediaUrls.length > 0 ? (
                 <AnimatePresence initial={false}>
                   <motion.div
                     key={currentMediaIndex}
@@ -161,16 +161,16 @@ function ProjectDetail({
                     transition={{ duration: 0.5 }}
                     className="absolute inset-0"
                   >
-                    {media[currentMediaIndex].type === "image" ? (
+                    {mediaUrls[currentMediaIndex].type === "image" ? (
                       <img
-                        src={media[currentMediaIndex].url || "/placeholder.svg"}
+                        src={mediaUrls[currentMediaIndex].url || "/placeholder.svg"}
                         alt="Project Media"
                         className="object-cover w-full h-full"
                       />
                     ) : (
                       <video controls className="w-full h-full object-cover">
                         <source
-                          src={media[currentMediaIndex].url}
+                          src={mediaUrls[currentMediaIndex].url}
                           type="video/mp4"
                         />
                         Your browser does not support the video tag.

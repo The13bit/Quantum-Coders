@@ -1,13 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import Header from "../components/Header";
-import FeaturedProjects from "../components/FeaturedProjects";
-import AboutSection from "../components/AboutSection";
-import Footer from "../components/Footer";
-import DynamicBackground from "../components/DynamicBackground";
+
+import Header from "@/components/Header";
+import FeaturedProjects from "@/components/FeaturedProjects";
+import AboutSection from "@/components/AboutSection";
+import Footer from "@/components/Footer";
+import DynamicBackground from "@/components/DynamicBackground";
 import { useState,useEffect } from "react";
+import ParticleBackground from "@/components/particleBackground";
+
 
 export default function Home() {
   const [topProjects, setTopProjects] = useState([]);
@@ -53,7 +55,7 @@ export default function Home() {
       transition={{ duration: 0.5 }}
       className="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
     >
-      <DynamicBackground />
+      <ParticleBackground/>
  
       <main className="flex-grow relative z-10">
         <Header />
