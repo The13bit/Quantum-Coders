@@ -104,7 +104,7 @@ export default function HomePage({params}) {
 
     return (
         <div>
-            <Navbar />
+           
             <ProjectDetail2 {...projectData} />
 
 

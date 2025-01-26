@@ -6,8 +6,10 @@ import { FundingProgress } from "./FundingProgress";
 import { ContributionOverTime } from "./ContributionOverTime";
 import { ContributorList } from "./ContributorList";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import PaymentField from "./PaymentField";
 
 function ProjectDetail({
+  _id = "",
   title = "Untitled Project",
   media = [],
   fundingGoal = 0,
@@ -23,6 +25,7 @@ function ProjectDetail({
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("Description");
   const progress = fundingGoal > 0 ? (raised / fundingGoal) * 100 : 0;
+  const [showPay, setShowPay] = useState(false);
 
   const handlePrev = () => {
     setCurrentMediaIndex((prevIndex) =>
@@ -225,7 +228,17 @@ function ProjectDetail({
               <p className="text-lg font-semibold text-indigo-800 mb-6">
                 {Math.ceil(hoursLeft / 24)} days to go
               </p>
-              <button className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 mb-4">
+              {showPay && (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+                  <PaymentField onClose={() => setShowPay(false)} id={_id} />
+                </div>
+              )}
+              <button
+                onClick={() => {
+                  setShowPay(!showPay);
+                }}
+                className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 mb-4"
+              >
                 Back this project
               </button>
               <button className="w-full bg-white text-indigo-600 px-6 py-3 rounded-lg shadow-md hover:bg-indigo-50 transition duration-300 border border-indigo-200">
@@ -236,21 +249,23 @@ function ProjectDetail({
         </div>
 
         {/* Tabs Section */}
-        <div className="border-t border-gray-200 mt-12">
+        <div className="border-t border-gray-200 mt-12 ">
           <div className="flex">
-            {["Description", "FAQ", "Updates", "Comments","contributions"].map((tab) => (
-              <button
-                key={tab}
-                className={`flex-1 text-center p-4 font-medium ${
-                  activeTab === tab
-                    ? "border-b-2 border-indigo-500 text-indigo-700"
-                    : "text-gray-600 hover:text-indigo-600"
-                }`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
+            {["Description", "FAQ", "Updates", "Comments", "contributions"].map(
+              (tab) => (
+                <button
+                  key={tab}
+                  className={`flex-1 text-center p-4 font-medium ${
+                    activeTab === tab
+                      ? "border-b-2 border-indigo-500 text-indigo-700"
+                      : "text-gray-600 hover:text-indigo-600"
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              )
+            )}
           </div>
           <div className="p-8 bg-gray-50">
             <AnimatePresence mode="wait">{renderContent()}</AnimatePresence>
