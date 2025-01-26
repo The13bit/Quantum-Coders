@@ -1,13 +1,60 @@
 "use client"
 
-import { useRef } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
-import { Points, PointMaterial } from "@react-three/drei"
-import * as random from "maath/random/dist/maath-random.esm"
+import { useRef, useEffect } from "react"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
+import { TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh } from "three"
+
+function Background({ url }) {
+  const texture = useRef()
+  const { scene, gl } = useThree()
+
+  useEffect(() => {
+    const loader = new TextureLoader()
+    loader.load(url, (loadedTexture) => {
+      texture.current = loadedTexture
+      updateBackgroundSize()
+    })
+
+    return () => texture.current?.dispose()
+  }, [url])
+
+  useEffect(() => {
+    const handleResize = () => updateBackgroundSize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  const updateBackgroundSize = () => {
+    if (!texture.current) return
+
+    const aspectRatio = gl.domElement.width / gl.domElement.height
+    const imageAspectRatio = texture.current.image.width / texture.current.image.height
+
+    let scale
+    if (aspectRatio > imageAspectRatio) {
+      scale = [aspectRatio / imageAspectRatio, 1]
+    } else {
+      scale = [1, imageAspectRatio / aspectRatio]
+    }
+
+    const geometry = new PlaneGeometry(2 * scale[0], 2 * scale[1])
+    const material = new MeshBasicMaterial({ map: texture.current })
+    const mesh = new Mesh(geometry, material)
+    mesh.position.set(0, 0, -1)
+
+    // Remove any existing background
+    const existingBackground = scene.getObjectByName("background")
+    if (existingBackground) scene.remove(existingBackground)
+
+    mesh.name = "background"
+    scene.add(mesh)
+  }
+
+  return null
+}
 
 function ParticleField({ count = 5000 }) {
   const ref = useRef()
-  const sphere = random.inSphere(new Float32Array(count * 3), { radius: 1.2 })
 
   useFrame((state, delta) => {
     ref.current.rotation.x -= delta / 10
@@ -15,26 +62,28 @@ function ParticleField({ count = 5000 }) {
   })
 
   return (
-    (<group rotation={[0, 0, Math.PI / 4]}>
-      <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          color="#ffa0e0"
-          size={0.005}
-          sizeAttenuation={true}
-          depthWrite={false} />
-      </Points>
-    </group>)
-  );
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute
+          attachObject={["attributes", "position"]}
+          count={count}
+          itemSize={3}
+          array={new Float32Array(count * 3).map(() => (Math.random() - 0.5) * 2)}
+        />
+      </bufferGeometry>
+      <pointsMaterial size={0.005} color="#ffa0e0" transparent opacity={0.6} />
+    </points>
+  )
 }
 
-export default function DynamicBackground() {
+export default function CanvasBackgroundImage() {
   return (
-    (<div className="fixed inset-0 z-0">
+    <div className="fixed inset-0">
       <Canvas camera={{ position: [0, 0, 1] }}>
-        <ParticleField />
+        <Background url="/beach.jpeg" />
+        {/* <ParticleField /> */}
       </Canvas>
-    </div>)
-  );
+    </div>
+  )
 }
 
