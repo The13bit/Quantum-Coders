@@ -28,9 +28,7 @@ export default function ProfilePage() {
     const fetchUserDetails = async () => {
       try {
         const response = await fetch("/api/auth/userInfo");
-        if (!response.ok) {
-          throw new Error("Failed to fetch user info");
-        }
+        
         const data = await response.json();
 
         setDetails({

@@ -8,13 +8,34 @@ import { Button } from "@/components/ui/button"
 import AnimatedBackground from "@/components/AnimatedBackground"
 
 export default function SignupPage() {
-  const [username, setUsername] = useState("")
+  const [name, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log("Signup attempted with:", { username, email, password })
+    fetch('http://localhost:3000/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      window.location.href = '/login';
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+    console.log("Signup attempted with:", { name, email, password })
   }
 
   const formAnimation = {
@@ -59,7 +80,7 @@ export default function SignupPage() {
             <Input
               id="username"
               type="text"
-              value={username}
+              value={name}
               onChange={(e) => setUsername(e.target.value)}
               required
               className="w-full" />

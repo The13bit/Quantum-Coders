@@ -12,7 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import CollaboratorsList from "./CollaboratorsList"
 import FAQList from "./FAQList"
 import MediaUrlsList from "./MediaUrlsList"
-
+import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
 const schema = yup.object().shape({
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
@@ -26,7 +27,8 @@ export default function ProjectEditor() {
   const [collaborators, setCollaborators] = useState([])
   const [faq, setFaq] = useState([])
   const [mediaUrls, setMediaUrls] = useState([])
-
+  const router = useRouter()
+  const { toast } = useToast()
   const {
     register,
     handleSubmit,
@@ -55,9 +57,14 @@ export default function ProjectEditor() {
       if (response.ok) {
         console.log("Project created successfully")
         // You might want to redirect the user or show a success message here
+        toast({ description: "Project created successfully", variant: "success" })
+        router.push("/view_all_projects")
+
       } else {
         console.error("Failed to create project")
         // Handle error, show error message to the user
+        toast({ description: "Failed to create project", variant: "destructive" })
+        //router.push("/view_all_projects")
       }
     } catch (error) {
       console.error("Error creating project:", error)

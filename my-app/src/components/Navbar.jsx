@@ -17,7 +17,7 @@ export default function Navbar() {
       }
     }
     getsession();
-  }, []);
+  });
 
   return (
     <motion.nav
@@ -90,6 +90,13 @@ export default function Navbar() {
             <Link href="/Profile">
               <span className="bg-gradient-to-r from-teal-500 to-green-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg">
                Profile
+              </span>
+            </Link>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link onClick={() => localStorage.removeItem("success")} href="/api/auth/signout">
+              <span className="bg-gradient-to-r from-teal-500 to-green-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg">
+               Sign Out
               </span>
             </Link>
           </motion.div>

@@ -33,34 +33,34 @@ export default function PaymentField({ onClose,id }) {
     })
 
   }
-  const handleStripePayment = async () => {
-    try {
-      const response = await stripe.createPaymentIntent({
-        amount: Math.round(amount * 100),
-        currency: 'usd',
-      });
+  // const handleStripePayment = async () => {
+  //   try {
+  //     const response = await stripe.createPaymentIntent({
+  //       amount: Math.round(amount * 100),
+  //       currency: 'usd',
+  //     });
 
-      const { clientSecret } = response;
+  //     const { clientSecret } = response;
 
-      const result = await stripe.confirmCardPayment(clientSecret);
+  //     const result = await stripe.confirmCardPayment(clientSecret);
 
-      if (result.error) {
-        toast({ description: result.error.message, variant: "destructive" });
-      } else if (result.paymentIntent.status === 'succeeded') {
-        await fetch(`/api/projects/${id}/contributions`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ amount, isAnonymous }),
-        });
-        toast({ description: "Payment Successful", variant: "success" });
-        onClose();
-      }
-    } catch (error) {
-      toast({ description: "Payment Failed", variant: "destructive" });
-    }
-  };
+  //     if (result.error) {
+  //       toast({ description: result.error.message, variant: "destructive" });
+  //     } else if (result.paymentIntent.status === 'succeeded') {
+  //       await fetch(`/api/projects/${id}/contributions`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ amount, isAnonymous }),
+  //       });
+  //       toast({ description: "Payment Successful", variant: "success" });
+  //       onClose();
+  //     }
+  //   } catch (error) {
+  //     toast({ description: "Payment Failed", variant: "destructive" });
+  //   }
+  // };
 
 
   return (
@@ -72,7 +72,7 @@ export default function PaymentField({ onClose,id }) {
           Close
         </p>
       </CardHeader>
-      <form onSubmit={handleStripePayment}>
+      <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="amount">Amount</Label>

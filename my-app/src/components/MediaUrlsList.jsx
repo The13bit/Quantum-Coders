@@ -12,7 +12,8 @@ export default function MediaUrlsList({
   const [newUrl, setNewUrl] = useState("")
   const [uploading, setUploading] = useState(false)
 
-  const addMediaUrl = () => {
+  const addMediaUrl = (e) => {
+    e.preventDefault()
     if (newUrl) {
       setMediaUrls([...mediaUrls, newUrl])
       setNewUrl("")

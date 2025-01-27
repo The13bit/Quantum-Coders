@@ -10,7 +10,8 @@ export default function FAQList({
   const [newQuestion, setNewQuestion] = useState("")
   const [newAnswer, setNewAnswer] = useState("")
 
-  const addFAQ = () => {
+  const addFAQ = (e) => {
+    e.preventDefault()
     if (newQuestion && newAnswer) {
       setFaq([...faq, { question: newQuestion, answer: newAnswer }])
       setNewQuestion("")
